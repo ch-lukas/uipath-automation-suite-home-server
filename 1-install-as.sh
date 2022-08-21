@@ -255,6 +255,12 @@ function enableCockpit() {
 ListenStream=
 ListenStream=45500
 EOF
+
+    # Adding firewall rule
+    systemctl start firewalld
+    firewall-cmd --zone=public --add-port=45500/tcp --permanent
+    firewall-cmd --reload
+    systemctl restart firewalld
   fi
 
   echo 'Installing Cockpit SSL cert'
