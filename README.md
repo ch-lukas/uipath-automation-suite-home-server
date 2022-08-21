@@ -1,4 +1,4 @@
-# uipath-home-server
+# uipath-automation-suite-home-server
 
 # Table of Contents
   - [1. Background & Purpose](#1-background--purpose)
@@ -82,8 +82,8 @@ linuxefi /images/pxeboot/vmlinuz <INSERT HERE LOCATION> inst.stage2...
 ```
 
 - Then insert the following into the 'INSERT HERE LOCATION':
-  - inst.ks=https://bit.ly/3QYgCWG (N.B. this is a shortened bit.ly link)
-  - If that doesn't work, then use the original full link (or create a new bit.ly) using https://raw.githubusercontent.com/ch-lukas/uipath-home-server/main/0-install-os.cfg 
+  - inst.ks=https://bit.ly/3wfSiYw (N.B. this is a shortened bit.ly link)
+  - If that doesn't work, then use the original full link (or create a new bit.ly) using https://raw.githubusercontent.com/ch-lukas/uipath-automation-suite-home-server/main/0-install-os.cfg 
   - It should look something like the below - 
 
 ```
