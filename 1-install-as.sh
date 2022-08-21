@@ -24,7 +24,7 @@ function updateSystem() {
   echo '--- Updating system'
   echo '--- Updating system'
   echo '--- Updating system'
-  dnf -y update
+  dnf --nobest -y update
   echo '---!'
 }
 
@@ -211,20 +211,6 @@ EOF
   echo '---!'
 }
 
-function setupCRONSSLJob() {
-  echo '--- Setting up CRON job to update certs every month'
-  echo '--- Setting up CRON job to update certs every month'
-  echo '--- Setting up CRON job to update certs every month'
-  #write out current crontab
-  crontab -l > sslUpdateCron
-  #echo new cron into cron file
-  echo "1 2 28 * * \"$DIR/2-update-ssl.sh\" --cron --home \"$DIR\" > /dev/null" >> sslUpdateCron
-  #install new cron file
-  crontab sslUpdateCron
-  rm -f sslUpdateCron
-  echo '---!'
-}
-
 function setupSSL() {
   echo '--- Setting up SSL certs'
   echo '--- Setting up SSL certs'
@@ -262,13 +248,20 @@ function setupSSL() {
     sed -i "s/<TLSKEY>/$ACMEDIR\/$HOSTNAME.$DOMAIN.key/g" $DIR/settings.cfg
 
     echo 'Updating certs in AS'
-    source $DIR/2-update-ssl.sh
-    echo '---!'
+    $DIR/2-update-ssl.sh || $DIR/2-update-ssl.sh
 
-    setupCRONSSLJob
+    echo 'Setting up CRON job to update certs every month'
+    #write out current crontab
+    crontab -l > sslUpdateCron
+    #echo new cron into cron file
+    echo "1 2 28 * * \"$DIR/2-update-ssl.sh\" --cron --home \"$DIR\" > /dev/null" >> sslUpdateCron
+    #install new cron file
+    crontab sslUpdateCron
+    rm -f sslUpdateCron
   else
     echo 'Missing DNS information. SSL certs have not been requested or setup.'
   fi
+  echo '---!'
 }
 
 function resetPWD() {
