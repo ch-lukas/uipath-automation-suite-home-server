@@ -103,6 +103,8 @@ function installSQL() {
   firewall-cmd --reload
   dnf install -y mssql-server-fts
   systemctl restart mssql-server
+  sleep 30
+  systemctl status mssql-server
   echo '---!'
 }
 
