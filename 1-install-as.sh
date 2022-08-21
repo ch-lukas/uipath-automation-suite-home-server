@@ -11,13 +11,6 @@ UIPATHDIR="/opt/UiPathAutomationSuite/$VERSION"
 CONFIGLOCATION='/opt/UiPathAutomationSuite'
 ##############
 
-function error() {
-  RED='\033[0;31m'
-  NC='\033[0m' # No Color
-  echo -e "${RED}[ERROR][$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*${NC}\n" >&2
-  #exit 1
-}
-
 function installPackages() {
   echo '--- Installing packages'
   echo '--- Installing packages'
@@ -59,13 +52,17 @@ function updateNetwork() {
       sed -i 's/IPV4_DHCP_TIMEOUT=90//g' /etc/sysconfig/network-scripts/ifcfg-$NETDEVICE
     fi
 
-    cat << EOF >> $NETFILE
+    if grep -q "IPADDR=$IP" "$NETFILE"; then
+        cat << EOF >> $NETFILE
 IPADDR=$IP
 NETMASK=$SUBNET
 GATEWAY=$GATEWAY
 DNS1=$DNS
 EOF
-
+    fi
+  else
+    echo "Could not find network device. Please fix and try again. Exiting..."
+    exit 1
   fi
 
   hostnamectl set-hostname "$HOSTNAME.$DOMAIN"
