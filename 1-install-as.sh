@@ -184,33 +184,6 @@ function installAS() {
   echo '---!'
 }
 
-function enableCockpit() {
-  echo '--- Enabling remote admin cockpit'
-  echo '--- Enabling remote admin cockpit'
-  echo '--- Enabling remote admin cockpit'
-  if [[ $(systemctl list-units --all -t service --full --no-legend "cockpit.service" | sed 's/^\s*//g' | cut -f1 -d' ') == "cockpit.service" ]]; then
-    echo 'Cockpit already installed.'
-  else
-    echo 'Installing Cockpit'
-    dnf install -y cockpit
-    COCKPITDIR='/etc/systemd/system/cockpit.socket.d'
-    mkdir $COCKPITDIR
-    touch "$COCKPITDIR/listen.conf"
-
-    cat << EOF >> "$COCKPITDIR/listen.conf"
-[Socket]
-ListenStream=
-ListenStream=45500
-EOF
-
-  fi
-
-  systemctl daemon-reload
-  systemctl restart cockpit.socket
-  systemctl enable cockpit.socket
-  echo '---!'
-}
-
 function setupSSL() {
   echo '--- Setting up SSL certs'
   echo '--- Setting up SSL certs'
@@ -239,13 +212,13 @@ function setupSSL() {
       export $DNSIP
     fi
 
-    /root/.acme.sh/acme.sh --debug --issue --dns $DNSPROVIDER -d "$HOSTNAME.$DOMAIN" -d "*.$HOSTNAME.$DOMAIN" -d "*.$DOMAIN"
+    /root/.acme.sh/acme.sh --debug --issue --dns $DNSPROVIDER -d "$DOMAIN" -d "*.$DOMAIN" -d "$HOSTNAME.$DOMAIN" -d "*.$HOSTNAME.$DOMAIN" 
 
     echo 'Updating cert file locations'
-    ACMEDIR="\/root\/.acme.sh\/$HOSTNAME.$DOMAIN"
+    ACMEDIR="\/root\/.acme.sh\/$DOMAIN"
     sed -i "s/<CACERT>/$ACMEDIR\/ca.cer/g" $DIR/settings.cfg
-    sed -i "s/<TLSCERT>/$ACMEDIR\/$HOSTNAME.$DOMAIN.cer/g" $DIR/settings.cfg
-    sed -i "s/<TLSKEY>/$ACMEDIR\/$HOSTNAME.$DOMAIN.key/g" $DIR/settings.cfg
+    sed -i "s/<TLSCERT>/$ACMEDIR\/$DOMAIN.cer/g" $DIR/settings.cfg
+    sed -i "s/<TLSKEY>/$ACMEDIR\/$DOMAIN.key/g" $DIR/settings.cfg
 
     echo 'Updating certs in AS'
     $DIR/2-update-ssl.sh || $DIR/2-update-ssl.sh
@@ -254,13 +227,47 @@ function setupSSL() {
     #write out current crontab
     crontab -l > sslUpdateCron
     #echo new cron into cron file
-    echo "1 2 28 * * \"$DIR/2-update-ssl.sh\" --cron --home \"$DIR\" > /dev/null" >> sslUpdateCron
+    (crontab -l | grep "$DIR/2-update-ssl.sh") || { crontab -l; echo "1 2 28 * * \"$DIR/2-update-ssl.sh\" --cron --home \"$DIR\" > /dev/null" >> sslUpdateCron; } | crontab -
     #install new cron file
     crontab sslUpdateCron
     rm -f sslUpdateCron
   else
     echo 'Missing DNS information. SSL certs have not been requested or setup.'
   fi
+  echo '---!'
+}
+
+function enableCockpit() {
+  echo '--- Enabling remote admin cockpit'
+  echo '--- Enabling remote admin cockpit'
+  echo '--- Enabling remote admin cockpit'
+  if [[ $(systemctl list-units --all -t service --full --no-legend "cockpit.service" | sed 's/^\s*//g' | cut -f1 -d' ') == "cockpit.service" ]]; then
+    echo 'Cockpit already installed.'
+  else
+    echo 'Installing Cockpit'
+    dnf install -y cockpit
+    COCKPITDIR='/etc/systemd/system/cockpit.socket.d'
+    mkdir $COCKPITDIR
+    touch "$COCKPITDIR/listen.conf"
+
+    cat << EOF >> "$COCKPITDIR/listen.conf"
+[Socket]
+ListenStream=
+ListenStream=45500
+EOF
+  fi
+
+  echo 'Installing Cockpit SSL cert'
+  rm -rf /etc/cockpit/ws-certs.d/$DOMAIN.cert
+  cp $TLSCERT /etc/cockpit/ws-certs.d/$DOMAIN.cert
+  rm -rf /etc/cockpit/ws-certs.d/$DOMAIN.key
+  cp $TLSKEY /etc/cockpit/ws-certs.d/$DOMAIN.key
+
+  /etc/cockpit/ws-certs.d/
+
+  systemctl daemon-reload
+  systemctl restart cockpit.socket
+  systemctl enable cockpit.socket
   echo '---!'
 }
 
@@ -287,8 +294,8 @@ function main() {
   updateASFiles
   createASConfig
   installAS
-  enableCockpit
   setupSSL
+  enableCockpit
   updateSystem
   resetPWD
 
