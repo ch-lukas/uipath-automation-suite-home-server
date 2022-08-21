@@ -1,0 +1,81 @@
+{
+  "fqdn": "<fqdn>",
+  "fixed_rke_address": "<fqdn>",
+  "airgapped": "false",
+  "profile": "default",
+  "rke_token": "<rke_token>",
+  "admin_username": "admin",
+  "admin_password": "<admin_pwd>",
+  "infra": {
+    "docker_registry": {
+      "username": "admin",
+      "password": "<docker_password>"
+    }
+  },
+  "sql": {
+    "server_url": "<ip>",
+    "username": "sa",
+    "password": "<sql_password>",
+    "port": "1433",
+    "create_db": "true"
+  },
+  "kerberos_auth_config": {
+    "enabled": "false",
+    "ticket_lifetime_in_hour": "8",
+    "ad_domain": "",
+    "default_ad_username": "",
+    "default_user_keytab": ""
+  },
+  "sql_connection_string_template": "Server=tcp:<ip>,1433;Initial Catalog=DB_NAME_PLACEHOLDER;Persist Security Info=False;User Id=sa;Password='<sql_password>';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;Max Pool Size=100;",
+  "sql_connection_string_template_jdbc": "jdbc:sqlserver://<ip>:1433;database=DB_NAME_PLACEHOLDER;user=sa;password={<sql_password>};encrypt=true;trustServerCertificate=true;Connection Timeout=30;hostNameInCertificate=<ip>",
+  "sql_connection_string_template_odbc": "SERVER=<ip>,1433;DATABASE=DB_NAME_PLACEHOLDER;DRIVER={ODBC Driver 17 for SQL Server};UID=sa;PWD={<sql_password>};MultipleActiveResultSets=False;Encrypt=YES;TrustServerCertificate=YES;Connection Timeout=30;",
+  "orchestrator": {
+    "testautomation": {
+      "enabled": "true"
+    },
+    "updateserver": {
+      "enabled": "true"
+    }
+  },
+  "action_center": {
+    "enabled": "true"
+  },
+  "test_manager": {
+    "enabled": "true"
+  },
+  "insights": {
+    "enabled": "true"
+  },
+  "automation_hub": {
+    "enabled": "true"
+  },
+  "automation_ops": {
+    "enabled": "true"
+  },
+  "aicenter": {
+    "enabled": "<full>"
+  },
+  "apps": {
+    "enabled": "<full>"
+  },
+  "documentunderstanding": {
+    "enabled": "<full>"
+  },
+  "dataservice": {
+    "enabled": "true"
+  },
+  "task_mining": {
+    "enabled": "<full>"
+  },
+  "telemetry_optout": "false",
+  "fabric": {
+    "redis": {
+      "ha": "false"
+    }
+  },
+  "proxy": {
+    "enabled": "false"
+  },
+  "cloud_template_vendor": "Interactive",
+  "cloud_template_source": "Manual"
+}
