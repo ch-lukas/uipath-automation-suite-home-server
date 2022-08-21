@@ -142,9 +142,9 @@ ssh root@192.168.1.20
   
 ```
 
-git clone https://github.com/ch-lukas/uipath-home-server.git ~/uipath-home-server
-chmod -R 755 ./uipath-home-server
-cd ~/uipath-home-server
+git clone https://github.com/ch-lukas/uipath-automation-suite-home-server.git ~/uipath-automation-suite-home-server
+chmod -R 755 ./uipath-automation-suite-home-server
+cd ~/uipath-automation-suite-home-server
 
 ```
 - At this point, if you haven't already cloned the repo and updated the <b>settings.cfg</b> file. Then do it now and ensure the settings match your needs. The default values are:
