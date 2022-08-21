@@ -153,7 +153,7 @@ cd ~/uipath-automation-suite-home-server
 
 # An easy way to do that is to use nano ... e.g.
 nano settings.cfg
-# Type ctrl-x to exit and then Y to save
+# Type ctrl-x to exit and then Y & Enter to save
 
 ```
 
