@@ -147,7 +147,17 @@ chmod -R 755 ./uipath-automation-suite-home-server
 cd ~/uipath-automation-suite-home-server
 
 ```
-- At this point, if you haven't already cloned the repo and updated the <b>settings.cfg</b> file. Then do it now and ensure the settings match your needs. The default values are:
+- At this point, if you haven't already cloned the repo and updated the <b>settings.cfg</b> file. Then do it now and ensure the settings match your needs. 
+  
+```
+
+# An easy way to do that is to use nano ... e.g.
+nano settings.cfg
+# Type ctrl-x to exit and then Y to save
+
+```
+
+- The default values are:
   
 ```
 
