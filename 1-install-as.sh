@@ -42,8 +42,7 @@ function updateNetwork() {
   echo '--- Updating networking & hosts'
   echo '--- Updating networking & hosts'
   echo '--- Updating networking & hosts'
-  NETFILE="/etc/sysconfig/network-scripts/ifcfg-$NETDEVICE"
-
+  
   if [ -f "$NETFILE" ]; then
     if grep -q 'BOOTPROTO=dhcp' "$NETFILE"; then
       echo "Switching to Static IP address."
@@ -53,13 +52,17 @@ function updateNetwork() {
     fi
 
     if grep -q "IPADDR=$IP" "$NETFILE"; then
-        cat << EOF >> $NETFILE
+      echo "Static IP address already configured."
+    else
+      echo "Configuring static IP address."
+      cat << EOF >> $NETFILE
 IPADDR=$IP
 NETMASK=$SUBNET
 GATEWAY=$GATEWAY
 DNS1=$DNS
 EOF
     fi
+
   else
     echo "Could not find network device. Please fix and try again. Exiting..."
     exit 1
@@ -103,7 +106,7 @@ function installSQL() {
   firewall-cmd --reload
   dnf install -y mssql-server-fts
   systemctl restart mssql-server
-  sleep 30
+  sleep 15
   systemctl status mssql-server
   echo '---!'
 }
