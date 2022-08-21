@@ -42,7 +42,8 @@ function updateNetwork() {
   echo '--- Updating networking & hosts'
   echo '--- Updating networking & hosts'
   echo '--- Updating networking & hosts'
-  
+  NETFILE="/etc/sysconfig/network-scripts/ifcfg-$NETDEVICE"
+
   if [ -f "$NETFILE" ]; then
     if grep -q 'BOOTPROTO=dhcp' "$NETFILE"; then
       echo "Switching to Static IP address."
