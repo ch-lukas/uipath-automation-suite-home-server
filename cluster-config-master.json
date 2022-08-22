@@ -53,19 +53,23 @@
     "enabled": "true"
   },
   "aicenter": {
-    "enabled": "<full>"
+    "enabled": "<full>",
+    "sql_connection_str": ""
   },
   "apps": {
-    "enabled": "<full>"
+    "enabled": "<full>",
+    "sql_connection_str": ""
   },
   "documentunderstanding": {
-    "enabled": "<full>"
+    "enabled": "<full>",
+    "sql_connection_str": ""
   },
   "dataservice": {
     "enabled": "true"
   },
   "task_mining": {
-    "enabled": "<full>"
+    "enabled": "<full>",
+    "sql_connection_str": ""
   },
   "telemetry_optout": "false",
   "fabric": {
